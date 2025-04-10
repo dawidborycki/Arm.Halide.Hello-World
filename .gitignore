@@ -1,0 +1,58 @@
+# macOS system files
+.DS_Store
+
+# Build artifacts
+/build/
+/bin/
+/obj/
+/out/
+/lib/
+/CMakeFiles/
+/CMakeCache.txt
+/Makefile
+/cmake_install.cmake
+*.dir/
+
+# Android NDK build artifacts
+.externalNativeBuild/
+.gradle/
+/local.properties
+*.iml
+.idea/
+
+# IDE files
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# Compiler-generated files
+*.o
+*.a
+*.so
+*.exe
+*.dll
+*.dylib
+*.app
+*.apk
+
+# Logs and debugging
+*.log
+*.gch
+*.pch
+*.suo
+*.user
+*.obj
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Generated files
+*.pb.cc
+*.pb.h
+
+# Optional - Ignore asset/image folders if generated
+# /assets/
+/Figures/
