@@ -1,6 +1,8 @@
 #include "Halide.h"
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <string>       
+#include <cstdint>      
 
 using namespace Halide;
 using namespace cv;
@@ -27,7 +29,9 @@ int main() {
     ImageParam inputImage(UInt(8), 3);
     inputImage.set(inputBuffer);
 
-    // Define a Halide pipeline that inverts the image.
+    // Define Halide pipeline variables:
+    // x, y - spatial coordinates (width, height)
+    // c    - channel coordinate (R, G, B)
     Var x("x"), y("y"), c("c");
     Func invert("invert");
     invert(x, y, c) = 255 - inputImage(x, y, c);
@@ -40,7 +44,8 @@ int main() {
     Buffer<uint8_t> outputBuffer = invert.realize({input.cols, input.rows, input.channels()});
 
     // Wrap the Halide output buffer directly into an OpenCV Mat header.
-    // This does not copy data; it creates a header that refers to the same memory.
+    // CV_8UC3 indicates an 8-bit unsigned integer image (CV_8U) with 3 color channels (C3), typically representing RGB or BGR images.
+    // This does not copy data; it creates a header that refers to the same memory.        
     Mat output(input.rows, input.cols, CV_8UC3, outputBuffer.data());
 
     // Convert RGB back to BGR for proper display in OpenCV.
@@ -49,6 +54,8 @@ int main() {
     // Display the input and processed image.
     imshow("Original Image", input);
     imshow("Inverted Image", output);
+
+    // Wait indefinitely until a key is pressed.
     waitKey(0); // Wait for a key press before closing the window.
 
     return 0;

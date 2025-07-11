@@ -25,9 +25,7 @@ int main(int argc, char** argv) {
     ImageParam input(UInt(8), 2, "input");
 
     // Create a clamped function that limits the access to within the image bounds
-    Func clamped("clamped");
-    clamped(x, y) = input(clamp(x, 0, input.width()-1),
-                        clamp(y, 0, input.height()-1));
+    Func clamped = Halide::BoundaryConditions::repeat_edge(input);
 
     // Now use the clamped function in processing
     RDom r(0, 3, 0, 3);
