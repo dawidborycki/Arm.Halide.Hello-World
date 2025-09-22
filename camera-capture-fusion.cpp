@@ -40,13 +40,13 @@ Pipeline make_pipeline(ImageParam& input, Schedule schedule) {
 
     Func inputClamped = BoundaryConditions::repeat_edge(input);
 
-    // --- Gray (Rec.601) ---
+    // Gray (Rec.601)
     Func gray("gray");
     gray(x, y) = cast<uint8_t>(0.114f * inputClamped(x, y, 0)
                              + 0.587f * inputClamped(x, y, 1)
                              + 0.299f * inputClamped(x, y, 2));
 
-    // --- 3x3 binomial blur (sum/16) ---
+    // 3x3 binomial blur (sum/16)
     Func blur("blur");
     const uint16_t k[3][3] = {{1,2,1},{2,4,2},{1,2,1}};
     Expr blurSum = cast<uint16_t>(0);
@@ -55,7 +55,7 @@ Pipeline make_pipeline(ImageParam& input, Schedule schedule) {
             blurSum = blurSum + cast<uint16_t>(gray(x + i - 1, y + j - 1)) * k[j][i];
     blur(x, y) = cast<uint8_t>(blurSum / 16);
 
-    // --- Threshold (binary) ---
+    // Threshold (binary)
     Func thresholded("thresholded");
     Expr T = cast<uint8_t>(128);
     thresholded(x, y) = select(blur(x, y) > T, cast<uint8_t>(255), cast<uint8_t>(0));
@@ -65,7 +65,7 @@ Pipeline make_pipeline(ImageParam& input, Schedule schedule) {
     output(x, y) = thresholded(x, y);
     output.compute_root(); // we always realize 'output'
 
-    // --- Scheduling to demonstrate OPERATOR FUSION vs MATERIALIZATION ---
+    // Scheduling to demonstrate OPERATOR FUSION vs MATERIALIZATION
     // Default in Halide = fusion/inlining (no schedule on producers).
     Var xo("xo"), yo("yo"), xi("xi"), yi("yi");
 
