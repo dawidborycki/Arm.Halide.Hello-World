@@ -156,10 +156,10 @@ int main(int argc, char** argv) {
         if (!frame.isContinuous()) frame = frame.clone();
 
         // Wrap interleaved frame
-        auto in_rt = Runtime::Buffer<uint8_t>::make_interleaved(
-            frame.data, frame.cols, frame.rows, /*channels*/3);
-        Buffer<> in_fe(*in_rt.raw_buffer());
-        input.set(in_fe);
+        Halide::Buffer<uint8_t> inputBuf = Runtime::Buffer<uint8_t>::make_interleaved(
+            frame.data, frame.cols, frame.rows, frame.channels());
+        
+        input.set(inputBuf);
 
         // Time the Halide realize() only
         auto t0 = std::chrono::high_resolution_clock::now();
